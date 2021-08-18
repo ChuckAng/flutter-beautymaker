@@ -1,6 +1,6 @@
-# beautymaker
+# BeautyMaker
 
-A new Flutter project.
+An e-commerce app for buyers to purchase beauty goods via integrated payment gateway.
 
 ## Getting Started
 
