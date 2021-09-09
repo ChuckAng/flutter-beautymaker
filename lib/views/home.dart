@@ -1,33 +1,39 @@
 import 'dart:ui';
 
-import 'package:beautymaker/const/drawerItems.dart';
-import 'package:beautymaker/views/drawer_view.dart';
+import 'package:beautymaker/components/favourite_button.dart';
+import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/views/list_view.dart';
+import 'package:beautymaker/views/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
 import "package:flutter_feather_icons/flutter_feather_icons.dart";
-import 'package:beautymaker/const/cartItemBox.dart';
-import 'package:beautymaker/controllers/animController.dart';
-import 'package:beautymaker/controllers/productcontroller.dart';
+import 'package:beautymaker/components/cart_item_box.dart';
+import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/cart_view.dart';
 import 'package:beautymaker/views/grid_view.dart';
 
 class HomePage extends StatelessWidget {
-  final VoidCallback openDrawer;
-
-  HomePage({Key? key, required this.openDrawer}) : super(key: key);
-
   String _cartTag = "";
-  final backgroundColor = HexColor('edebeb');
+
+  //  List<int> data = Get.arguments;
+  dynamic data = Get.arguments;
+
+  final backgroundColor = HexColor('e8e8e8');
   //edebeb
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.height;
+    
+    
     AnimatedController _listController = Get.put(AnimatedController());
+    AnimatedController _scrollController = Get.put(AnimatedController());
+    AnimatedController _wordFadeController = Get.put(AnimatedController());
     ProductController _productController = Get.put(ProductController());
     return SafeArea(
       child: Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Colors.blueGrey[50],
         body: Stack(children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -36,14 +42,12 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 15, right: 10),
+                  padding: const EdgeInsets.only(
+                      top: 15, left: 15, right: 10, bottom: 10),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          openDrawer();
-                          print("tapped");
-                        },
+                      FadeTransition(
+                        opacity: _wordFadeController.wordFadingController,
                         child: Text(
                           "Beauty",
                           style: TextStyle(
@@ -54,13 +58,16 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        "Maker",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 4,
-                            fontSize: 22,
-                            fontFamily: 'Synemono'),
+                      FadeTransition(
+                        opacity: _wordFadeController.wordFadingController,
+                        child: Text(
+                          "Maker",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 4,
+                              fontSize: 22,
+                              fontFamily: 'Synemono'),
+                        ),
                       ),
                       Spacer(),
                       Row(
@@ -73,7 +80,8 @@ class HomePage extends StatelessWidget {
                             iconSize: 27,
                             icon: AnimatedIcon(
                                 icon: AnimatedIcons.list_view,
-                                progress: _listController.animationController),
+                                progress:
+                                    _listController.listAnimationController),
                           ),
                           Stack(
                             children: [
@@ -91,7 +99,7 @@ class HomePage extends StatelessWidget {
                                   size: 27,
                                 ),
                                 onPressed: () {
-                                  Get.to(() => Cart());
+                                  Get.to(() => Cart(), arguments: data);
                                 },
                               ),
                             ],
@@ -112,30 +120,10 @@ class HomePage extends StatelessWidget {
                         );
                       }
                       if (_listController.isGrid.value) {
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  _productController.addIntoCart();
-                                  print("listview is tapped!");
-                                  _listController.onClickBeauty();
-                                  print('${_listController.test.value}');
-                                },
-                                child: Card(
-                                  child: Container(
-                                    height: 50,
-                                    width: 200,
-                                    child: Image.network(_productController
-                                        .productList[index]["image_link"]),
-                                  ),
-                                ),
-                              );
-                            });
+                        return const BuildListView();
                       }
 
-                      return BuildGridView();
+                      return const BuildGridView();
                     },
                   ),
                 ),

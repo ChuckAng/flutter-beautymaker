@@ -1,4 +1,4 @@
-import 'package:beautymaker/controllers/productcontroller.dart';
+import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -17,17 +17,17 @@ Widget CartIemCountBox(ProductController _productController) {
     height: 14,
     width: 14,
     decoration: BoxDecoration(
-        color: _productController.cartIem.value == 0
-            ? backgroundColor
+        color: _productController.cartItem.value == 0
+            ? Colors.transparent
             : Colors.black,
         borderRadius: BorderRadius.circular(3)),
     child: Center(
       child: Text(
-        "${_productController.cartIem.value}",
+        "${_productController.cartItem.value}",
         style: TextStyle(
             fontSize: 12,
-            color: _productController.cartIem.value == 0
-                ? backgroundColor
+            color: _productController.cartItem.value == 0
+                ? Colors.transparent
                 : Colors.white),
       ),
     ),

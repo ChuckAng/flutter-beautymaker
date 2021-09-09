@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982291589323",
+    "project_id": "beautymaker-e8180",
+    "storage_bucket": "beautymaker-e8180.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982291589323:android:18596961c5b9af8e04134e",
+        "android_client_info": {
+          "package_name": "com.example.beautymaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982291589323-tsq75g6dmlt974j07nji4t0d7u9brqos.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQJsENCxuSIOZ2He4dQLyBEBhoxOHBQd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982291589323-tsq75g6dmlt974j07nji4t0d7u9brqos.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-import 'package:beautymaker/controllers/productcontroller.dart';
+import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 

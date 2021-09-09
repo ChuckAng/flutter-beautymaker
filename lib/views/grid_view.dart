@@ -1,5 +1,7 @@
-import 'package:beautymaker/controllers/animController.dart';
-import 'package:beautymaker/controllers/productcontroller.dart';
+import 'package:beautymaker/components/favourite_button.dart';
+import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -11,8 +13,8 @@ class BuildGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProductController _productController = Get.put(ProductController());
-    AnimatedController _listController = Get.put(AnimatedController());
     Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -25,13 +27,15 @@ class BuildGridView extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  Get.to(() => ProductDetail(), arguments: index);
+                  Get.to(() => ProductDetail(),
+                      arguments: [index]);
                 },
                 child: Container(
                   width: size.width,
                   height: size.height * 0.35,
                   decoration: BoxDecoration(
-                      color: Colors.white, borderRadius: BorderRadius.circular(28)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28)),
                   child: Column(
                     children: [
                       Padding(
@@ -83,25 +87,10 @@ class BuildGridView extends StatelessWidget {
                               child: Text(
                                 "\$${_productController.productList[index]["price"]}",
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 20,
-                                    fontFamily: 'Synemono'),
+                                style: const TextConsts(),
                               ),
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: 18,
-                              child: IconButton(
-                                alignment: Alignment.center,
-                                icon: Icon(
-                                  Icons.favorite_rounded,
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
+                            FavouriteButton(),
                           ],
                         ),
                       ),

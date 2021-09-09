@@ -7,8 +7,8 @@ class DrawerItems {
       DrawerItem(title: 'Profile', icon: FontAwesomeIcons.userAlt);
   static const favourite =
       DrawerItem(title: 'Favourite', icon: FontAwesomeIcons.solidHeart);
-      static const message =
-      DrawerItem(title: 'Favourite', icon: FontAwesomeIcons.solidEnvelope);
+      static const orders =
+      DrawerItem(title: 'My\nOrders', icon: FontAwesomeIcons.receipt);
   static const settings =
       DrawerItem(title: 'Settings', icon: FontAwesomeIcons.cog);
   static const logout =
@@ -18,8 +18,15 @@ class DrawerItems {
     home,
     profile,
     favourite,
-    message,
+    orders,
+   
+  ];
+
+  static final List<DrawerItem> bottomDrawer = [
+    
     settings,
     logout
   ];
+
+
 }
