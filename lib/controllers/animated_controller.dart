@@ -9,11 +9,9 @@ import 'package:get/utils.dart';
 class AnimatedController extends GetxController
     with SingleGetTickerProviderMixin {
   late AnimationController listAnimationController;
-  late ScrollController _scrollController;
   late AnimationController loginAnimationController;
-  late AnimationController _timerAnimationController;
   late Animation _animation;
-  late Animation<double> _rotationAnimation;
+  
   late AnimationController wordFadingController;
   bool isClicked = false;
   var isGrid = false.obs;
@@ -22,7 +20,7 @@ class AnimatedController extends GetxController
   RxDouble scaleFactor = 1.0.obs;
   bool isDragging = false;
   late bool isDrawerOpen = false;
-  RxBool isTop = false.obs;
+  
 
   Timer? timer;
   RxInt seconds = RxInt(60);
@@ -58,11 +56,10 @@ class AnimatedController extends GetxController
 
     loginAnimationController =
         AnimationController(vsync: this, duration: 600.milliseconds);
-    _startRotation();
 
     wordFadingController = AnimationController(
       vsync: this,
-      duration: 3000.milliseconds,
+      duration: 2300.milliseconds,
     );
     _animation = Tween(begin: 0.0, end: 1.0).animate(wordFadingController);
     wordFadingController.forward().then((_) async {
@@ -76,20 +73,8 @@ class AnimatedController extends GetxController
   void onClose() {
     wordFadingController.dispose();
     listAnimationController.dispose();
-    _scrollController.dispose();
+
     super.onClose();
-  }
-
-  void _startRotation() {
-    loginAnimationController.reset();
-
-    _rotationAnimation =
-        Tween<double>(begin: 0, end: 180).animate(loginAnimationController)
-          ..addListener(() {
-            update();
-          });
-
-    loginAnimationController.forward();
   }
 
   void toggleIcon() {

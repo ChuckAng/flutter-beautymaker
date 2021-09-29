@@ -1,6 +1,4 @@
-import 'package:beautymaker/components/favourite_button.dart';
-import 'package:beautymaker/components/text_const.dart';
-import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/product_detail.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ class BuildGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProductController _productController = Get.put(ProductController());
+
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -28,7 +27,7 @@ class BuildGridView extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   Get.to(() => ProductDetail(),
-                      arguments: [index]);
+                      arguments: [index], duration: 350.milliseconds);
                 },
                 child: Container(
                   width: size.width,
@@ -80,17 +79,14 @@ class BuildGridView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
-                              child: Text(
-                                "\$${_productController.productList[index]["price"]}",
-                                textAlign: TextAlign.left,
-                                style: const TextConsts(),
-                              ),
+                            Text(
+                              "\$${_productController.productList[index]["price"]}",
+                              textAlign: TextAlign.left,
+                              style: const TextConsts(),
                             ),
-                            FavouriteButton(),
                           ],
                         ),
                       ),

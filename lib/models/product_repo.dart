@@ -5,7 +5,10 @@ class ProductsRepo {
   var url = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=l'oreal";
 
   loadProductsFromApi() async {
+    
     var response = await http.get(Uri.parse(url));
     return json.decode(response.body);
+    
   }
 }
+

@@ -1,7 +1,8 @@
-import 'package:beautymaker/components/drawer_items.dart';
-import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:beautymaker/controllers/drawer_route_controller.dart';
+import 'package:beautymaker/utils/ui/drawer_items.dart';
 import 'package:beautymaker/controllers/logout_controller.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
+import 'package:beautymaker/utils/services/user_info_firebase.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 
@@ -9,7 +10,6 @@ class DrawerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserInfoFirebase _userInfoController = Get.put(UserInfoFirebase());
-    AnimatedController _animatedController = Get.put(AnimatedController());
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Column(
@@ -20,19 +20,6 @@ class DrawerView extends StatelessWidget {
             padding: EdgeInsets.only(left: 30, top: 50),
             child: Row(
               children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://learnyzen.com/wp-content/uploads/2017/08/test1-481x385.png")),
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
                 Expanded(
                   child: FutureBuilder(
                       future: _userInfoController.getUserData(),
@@ -44,52 +31,53 @@ class DrawerView extends StatelessWidget {
                                 strokeWidth: 2.0,
                               )
                             : Text(
-                                _userInfoController.displayName,
+                                'Hello!\n${_userInfoController.displayName}',
                                 softWrap: true,
-                                style: TextStyle(fontSize: 23),
+                                style:
+                                    TextConsts(size: 20, color: Colors.white),
                               );
                       }),
                 ),
               ],
             ),
           ),
-          Container(width: 165, child: _buildDrawerItems(context)),
-          Divider(
-            height: 100,
-            endIndent: 235,
-            indent: 15,
-            thickness: 1.0,
-            color: Colors.grey,
+          SizedBox(
+            height: 20,
           ),
-          Container(width: 165, child: _buildBottomDrawerItems(context)),
+          Container(width: 165, child: _buildDrawerItems(context)),
+          Spacer(),
+          Container(width: 165, child: _buildBottomDrawerItems()),
         ],
       ),
     );
   }
 
   Widget _buildDrawerItems(BuildContext context) {
+    final _routeController = Get.put(DrawerRouteController(), permanent: true);
+
     return Column(
-        children: DrawerItems.all
+        children: DrawerItems.upperDrawer
             .map(
               (item) => ListTile(
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                onTap: () {},
+                onTap: () => _routeController.getRoute(item),
                 title: Text(
                   item.title,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                 ),
                 leading: Icon(
                   item.icon,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             )
             .toList());
   }
 
-  Widget _buildBottomDrawerItems(BuildContext context) {
+  Widget _buildBottomDrawerItems() {
     LogoutController _logoutController = Get.put(LogoutController());
+    final _routeController = Get.put(DrawerRouteController(), permanent: true);
 
     return Column(
         children: DrawerItems.bottomDrawer
@@ -98,21 +86,18 @@ class DrawerView extends StatelessWidget {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 onTap: () {
-                  switch (item) {
-                    case DrawerItems.logout:
-                      _logoutController.logout();
-                      break;
-                    default:
-                      debugPrint('Invalid selection');
+                  _routeController.getRoute(item);
+                  if (item == DrawerItems.logout) {
+                    _logoutController.logout();
                   }
                 },
                 title: Text(
                   item.title,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                 ),
                 leading: Icon(
                   item.icon,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             )

@@ -1,12 +1,9 @@
-import 'dart:math' as math;
-
-import 'package:beautymaker/components/login_form.dart';
-import 'package:beautymaker/components/sign_up_form.dart';
-import 'package:beautymaker/components/login_tab.dart';
-import 'package:beautymaker/components/page_header.dart';
+import 'package:beautymaker/utils/ui/login_form.dart';
+import 'package:beautymaker/utils/ui/sign_up_form.dart';
+import 'package:beautymaker/utils/ui/login_tab.dart';
+import 'package:beautymaker/utils/ui/page_header.dart';
 import 'package:beautymaker/controllers/animated_controller.dart';
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/controllers/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 
@@ -16,10 +13,9 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoginController _loginAnimationController = Get.put(LoginController());
-    LogoutController _logoutController = Get.put(LogoutController());
+
     AnimatedController _wordFadeController = Get.put(AnimatedController());
 
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -27,10 +23,9 @@ class LoginPage extends StatelessWidget {
         },
         child: Obx(
           () => Scaffold(
-            backgroundColor:
-                _loginAnimationController.haveAccount.value == true 
-                    ? Colors.grey[200]
-                    : Colors.grey[900],
+            backgroundColor: _loginAnimationController.haveAccount.value == true
+                ? Colors.grey[200]
+                : Colors.grey[900],
             resizeToAvoidBottomInset: false,
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,

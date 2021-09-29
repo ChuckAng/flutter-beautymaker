@@ -1,10 +1,8 @@
 import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:beautymaker/controllers/drawer_route_controller.dart';
 import 'package:beautymaker/controllers/logout_controller.dart';
-import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/drawer_view.dart';
-import 'package:beautymaker/views/home.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:get/utils.dart';
 import 'package:getxfire/getxfire.dart';
 
@@ -14,7 +12,7 @@ class HomeDrawerSwap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[850],
       body: Stack(
         children: [const _buildDrawer(), const _buildPage()],
       ),
@@ -27,7 +25,6 @@ class _buildDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AnimatedController _animatedController = Get.put(AnimatedController());
     return SafeArea(child: DrawerView());
   }
 }
@@ -39,25 +36,12 @@ class _buildPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AnimatedController _animatedController = Get.put(AnimatedController());
     LogoutController _logoutController = Get.put(LogoutController());
-
-    void openDrawer() {
-      _animatedController.x.value = 170;
-      _animatedController.y.value = 120;
-      _animatedController.scaleFactor.value = 0.7;
-      _animatedController.isDrawerOpen = true;
-    }
-
-    void closeDrawer() {
-      _animatedController.x.value = 0;
-      _animatedController.y.value = 0;
-      _animatedController.scaleFactor.value = 1.0;
-      _animatedController.isDrawerOpen = false;
-    }
+    DrawerRouteController _routeController = Get.put(DrawerRouteController(),permanent: true);
 
     return WillPopScope(
       onWillPop: () async {
         if (_animatedController.isDrawerOpen) {
-          closeDrawer();
+          _routeController.closeDrawer();
           return false;
         } else {
           return true;
@@ -70,9 +54,10 @@ class _buildPage extends StatelessWidget {
           const delta = 1;
           if (!_animatedController.isDragging) return;
           if (details.delta.dx > delta) {
-            openDrawer();
+            FocusScope.of(context).unfocus();
+            _routeController.openDrawer();
           } else if (details.delta.dx < -delta) {
-            closeDrawer();
+            _routeController.closeDrawer();
           }
         },
         child: Obx(
@@ -88,7 +73,7 @@ class _buildPage extends StatelessWidget {
                       : BorderRadius.circular(0),
                   child: AbsorbPointer(
                       absorbing: _animatedController.isDrawerOpen,
-                      child: HomePage()))),
+                      child: _routeController.onSelectedPage(context)))),
         ),
       ),
     );

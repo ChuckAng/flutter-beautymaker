@@ -1,16 +1,13 @@
 import 'dart:async';
 
-import 'package:beautymaker/components/build_lottie_animation.dart';
-import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/utils/ui/build_lottie_animation.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/animated_controller.dart';
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/views/home_drawer_swap.dart';
-import 'package:beautymaker/views/login_view.dart';
 import 'package:beautymaker/views/otp_verify_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:lottie/lottie.dart';
 
 final TextEditingController _emailController = TextEditingController();
 

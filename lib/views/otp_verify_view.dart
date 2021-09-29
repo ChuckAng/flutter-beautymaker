@@ -1,21 +1,11 @@
-import 'dart:async';
-
-import 'package:beautymaker/components/build_lottie_animation.dart';
-import 'package:beautymaker/components/otp_pin_field.dart';
-import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/utils/ui/build_lottie_animation.dart';
+import 'package:beautymaker/utils/ui/otp_pin_field.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/animated_controller.dart';
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/views/home_drawer_swap.dart';
-import 'package:beautymaker/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:lottie/lottie.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/otp_field_style.dart';
-import 'package:otp_text_field/style.dart';
-
-
 
 late final dynamic email = Get.arguments;
 

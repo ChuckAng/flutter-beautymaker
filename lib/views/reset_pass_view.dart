@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:beautymaker/components/build_lottie_animation.dart';
-import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/utils/ui/build_lottie_animation.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
-import 'package:beautymaker/views/login_view.dart';
+import 'package:beautymaker/utils/services/user_info_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-late final dynamic email = Get.arguments;
+late dynamic email = Get.arguments;
+
 final String lottieUrl =
     "https://assets4.lottiefiles.com/packages/lf20_4yofoa5q.json";
 
@@ -26,7 +26,6 @@ class ResetPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    UserInfoFirebase _resetPasswordController = Get.put(UserInfoFirebase());
 
     return SafeArea(
       child: GestureDetector(
@@ -76,7 +75,6 @@ class _buildSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginController _loginController = Get.put(LoginController());
     UserInfoFirebase _resetPasswordController = Get.put(UserInfoFirebase());
 
     return Center(
@@ -101,6 +99,7 @@ class _buildSubmitButton extends StatelessWidget {
 
                   Timer(1.seconds, () {
                     _resetPasswordController.getEmailUid(email);
+
                     _resetPasswordController.resetUserPassword(
                         email,
                         _passwordController.text,
@@ -134,43 +133,46 @@ class _buildPasswordForm extends StatelessWidget {
   Widget build(BuildContext context) {
     LoginController _loginController = Get.put(LoginController());
 
-    return TextFormField(
-      controller: _passwordController,
-      cursorColor: HexColor('#c4a484'),
-      keyboardType: TextInputType.text,
-      style: TextStyle(color: Colors.black),
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      obscureText: _loginController.revealPassword == true ? false : true,
-      decoration: InputDecoration(
-        prefixIcon: Icon(
-          Icons.lock,
-          color: Colors.black,
-          size: 20,
-        ),
-        suffixIcon: Obx(
-          () => InkWell(
-            onTap: () {
-              _loginController.reveal();
-            },
-            child: Icon(
-              _loginController.revealPassword == false
-                  ? FeatherIcons.eyeOff
-                  : FeatherIcons.eye,
-              color: Colors.black,
-              size: 18,
+    return Obx(
+      () => TextFormField(
+        controller: _passwordController,
+        cursorColor: HexColor('#c4a484'),
+        keyboardType: TextInputType.text,
+        style: TextStyle(color: Colors.black),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        obscureText:
+            _loginController.resetPasswordReveal.value == true ? false : true,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.lock,
+            color: Colors.black,
+            size: 20,
+          ),
+          suffixIcon: Obx(
+            () => InkWell(
+              onTap: () {
+                _loginController.revealResetPassword();
+              },
+              child: Icon(
+                _loginController.resetPasswordReveal.value == false
+                    ? FeatherIcons.eyeOff
+                    : FeatherIcons.eye,
+                color: Colors.black,
+                size: 18,
+              ),
             ),
           ),
+          labelText: 'Password',
+          labelStyle: TextStyle(color: Colors.black),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(15)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
+              borderRadius: BorderRadius.circular(25)),
         ),
-        labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.black),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(15)),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
-            borderRadius: BorderRadius.circular(25)),
       ),
     );
   }
@@ -197,7 +199,7 @@ class _buildConfirmPasswordForm extends StatelessWidget {
           style: TextStyle(color: Colors.black),
           autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText:
-              _loginController.revealPassword.value == true ? false : true,
+              _loginController.resetPasswordReveal.value == true ? false : true,
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.lock,

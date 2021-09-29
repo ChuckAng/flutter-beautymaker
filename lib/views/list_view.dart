@@ -1,5 +1,4 @@
-import 'package:beautymaker/components/favourite_button.dart';
-import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/product_detail.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,8 @@ class BuildListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProductController _productController = Get.put(ProductController());
-    Size size = MediaQuery.of(context).size;
+    ProductController _productController =
+        Get.put(ProductController(), permanent: true);
 
     return ListView.builder(
         scrollDirection: Axis.vertical,
@@ -23,7 +22,7 @@ class BuildListView extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Get.to(() => ProductDetail(),
-                  arguments: [index, _productController.itemCount.value]);
+                  arguments: [index], duration: 350.milliseconds);
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15),
@@ -71,7 +70,6 @@ class BuildListView extends StatelessWidget {
                                         SizedBox(
                                           width: 40,
                                         ),
-                                        FavouriteButton(),
                                       ],
                                     ),
                                   ),

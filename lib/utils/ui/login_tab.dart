@@ -1,5 +1,4 @@
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/controllers/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 
@@ -13,7 +12,6 @@ class LoginTab extends StatelessWidget {
     String signIn = "Sign In";
     String signUp = "Sign Up";
     LoginController _loginController = Get.put(LoginController());
-    LogoutController _logoutController = Get.put(LogoutController());
 
     return Container(
         child: Row(

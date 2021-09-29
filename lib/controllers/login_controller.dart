@@ -1,7 +1,6 @@
 import 'package:beautymaker/controllers/animated_controller.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
+import 'package:beautymaker/utils/services/user_info_firebase.dart';
 import 'package:beautymaker/views/home_drawer_swap.dart';
-import 'package:beautymaker/views/login_view.dart';
 import 'package:beautymaker/views/reset_pass_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
@@ -10,9 +9,10 @@ import 'package:email_auth/email_auth.dart';
 class LoginController extends GetxController {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   EmailAuth _emailAuth = EmailAuth(sessionName: 'BeautyMaker');
-  
+
   RxBool haveAccount = true.obs;
   RxBool revealPassword = false.obs;
+  RxBool resetPasswordReveal = false.obs;
   RxBool allFilled = false.obs;
   RxBool isLoading = false.obs;
   RxBool startVerify = false.obs;
@@ -39,6 +39,10 @@ class LoginController extends GetxController {
     revealPassword.value = !revealPassword.value;
   }
 
+  void revealResetPassword() {
+    resetPasswordReveal.value = !resetPasswordReveal.value;
+  }
+
   // sign in user and verify by own database
   void signIn(String email, String password) async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -50,7 +54,8 @@ class LoginController extends GetxController {
 
     if (userEmail == email.trim() && userPass == password) {
       _userInfoFirebase.getEmailUid(email.trim());
-      Future.delayed(3.seconds, () {
+
+      Future.delayed(1.5.seconds, () {
         Get.to(() => HomeDrawerSwap());
       });
     } else {
@@ -61,29 +66,6 @@ class LoginController extends GetxController {
     }
 
     isLoading(false);
-  }
-
-  // sign in user and verify by firebase
-  void loginUser(String email, String password) async {
-    try {
-      await firebaseAuth.signInWithEmailAndPassword(
-          email: email.trim(), password: password);
-
-      Get.to(() => HomeDrawerSwap());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar("Error logging in account", e.message.toString(),
-            margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-            backgroundColor: Colors.white,
-            snackPosition: SnackPosition.BOTTOM);
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar("Error logging in account", e.message.toString(),
-            margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-            backgroundColor: Colors.white,
-            snackPosition: SnackPosition.BOTTOM);
-      }
-      isLoading(false);
-    }
   }
 
   void resendCode(String email) {

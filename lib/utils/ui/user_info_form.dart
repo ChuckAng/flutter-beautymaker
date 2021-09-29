@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:beautymaker/controllers/login_controller.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
+import 'package:beautymaker/utils/services/user_info_firebase.dart';
 import 'package:beautymaker/views/home_drawer_swap.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
-import 'package:beautymaker/services/create_user_firebase.dart';
+import 'package:beautymaker/utils/services/create_user_firebase.dart';
 import 'package:beautymaker/views/profile_setup.dart';
 
 final TextEditingController _displayNameController = TextEditingController();
@@ -57,25 +57,28 @@ class UserInfoForm extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 50,
+                  ),
                   const _buildDisplayName(),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   const _buildName(),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   const _buildBirthdate(),
                   SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                   const _buildPhoneNo(),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   const _buildAddress(),
                   SizedBox(
-                    height: 30,
+                    height: 45,
                   ),
                   const _buildSubmitButton(),
                 ],
@@ -168,7 +171,7 @@ class _buildDisplayName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // validator: _requiredValidator,
+      validator: _requiredValidator,
       controller: _displayNameController,
       maxLength: 15,
       keyboardType: TextInputType.emailAddress,
@@ -192,7 +195,7 @@ class _buildDisplayName extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
             borderRadius: BorderRadius.circular(25)),
       ),
     );
@@ -207,7 +210,7 @@ class _buildName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      //  validator: _requiredValidator,
+      validator: _requiredValidator,
       controller: _nameController,
       maxLength: 20,
       keyboardType: TextInputType.text,
@@ -231,7 +234,7 @@ class _buildName extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
             borderRadius: BorderRadius.circular(25)),
       ),
     );
@@ -277,7 +280,7 @@ class _buildBirthdate extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
             borderRadius: BorderRadius.circular(25)),
       ),
     );
@@ -292,7 +295,7 @@ class _buildPhoneNo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      //   validator: _requiredValidator,
+      validator: _requiredValidator,
       controller: _phoneController,
       maxLength: 15,
       keyboardType: TextInputType.phone,
@@ -316,7 +319,7 @@ class _buildPhoneNo extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
             borderRadius: BorderRadius.circular(25)),
       ),
     );
@@ -331,7 +334,7 @@ class _buildAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      //  validator: _requiredValidator,
+      validator: _requiredValidator,
       controller: _addressController,
       maxLines: 2,
       maxLength: 80,
@@ -356,7 +359,7 @@ class _buildAddress extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.5),
+            borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),
             borderRadius: BorderRadius.circular(25)),
       ),
     );

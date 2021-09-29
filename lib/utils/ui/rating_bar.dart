@@ -8,13 +8,6 @@ class BuildStarWidget extends StatelessWidget {
   final int _productIndex;
   BuildStarWidget(this._productIndex);
 
-  Widget _buildRatingStars() {
-    if (_productController.productList[_productIndex]["rating"] == null) {
-      return Icon(Icons.star_border_outlined);
-    }
-    return Icon(Icons.star);
-  }
-
   Widget _buildBody() {
     final stars = List<Widget>.generate(maxRating, (index) {
       if (_productController.productList[_productIndex]["rating"] == null) {

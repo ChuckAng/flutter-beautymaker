@@ -7,26 +7,18 @@ class DrawerItems {
       DrawerItem(title: 'Profile', icon: FontAwesomeIcons.userAlt);
   static const favourite =
       DrawerItem(title: 'Favourite', icon: FontAwesomeIcons.solidHeart);
-      static const orders =
+  static const orders =
       DrawerItem(title: 'My\nOrders', icon: FontAwesomeIcons.receipt);
   static const settings =
       DrawerItem(title: 'Settings', icon: FontAwesomeIcons.cog);
   static const logout =
       DrawerItem(title: 'Logout', icon: FontAwesomeIcons.signOutAlt);
 
-  static final List<DrawerItem> all = [
+  static final List<DrawerItem> upperDrawer = [
     home,
     profile,
-    favourite,
     orders,
-   
   ];
 
-  static final List<DrawerItem> bottomDrawer = [
-    
-    settings,
-    logout
-  ];
-
-
+  static final List<DrawerItem> bottomDrawer = [settings, logout];
 }

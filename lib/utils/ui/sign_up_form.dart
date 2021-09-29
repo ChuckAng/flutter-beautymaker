@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:beautymaker/controllers/login_controller.dart';
 import 'package:beautymaker/controllers/logout_controller.dart';
-import 'package:beautymaker/services/create_user_firebase.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
-import 'package:beautymaker/views/forgot_pass_view.dart';
-import 'package:beautymaker/views/home_drawer_swap.dart';
+import 'package:beautymaker/utils/services/create_user_firebase.dart';
 import 'package:beautymaker/views/profile_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,8 +14,8 @@ final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 final CreateUserFirebase _firebaseController = Get.put(CreateUserFirebase());
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({Key? key}) : super(key: key);
+class SignUpForm extends StatelessWidget {
+  const SignUpForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +25,21 @@ class LoginForm extends StatelessWidget {
       width: size.width * .75,
       height: size.height * .47,
       decoration: BoxDecoration(
-          color: Colors.grey[900], borderRadius: BorderRadius.circular(30)),
+          color: Colors.grey[200], borderRadius: BorderRadius.circular(30)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome Back,",
+              "Aloha.",
               style: TextStyle(
-                  fontSize: 22, color: Colors.white, fontFamily: 'Synemono'),
-            ),
-            SizedBox(
-              height: 10,
+                  fontSize: 22, color: Colors.black, fontFamily: 'Synemono'),
             ),
             Text(
-              "Have A Great Day.",
+              "\nCreate User Account\nTo Login Now",
               style: TextStyle(
-                  fontSize: 18, color: Colors.white, fontFamily: 'Synemono'),
+                  fontSize: 18, color: Colors.black, fontFamily: 'Synemono'),
             ),
             Spacer(),
             const _buildEmailForm(),
@@ -57,15 +51,6 @@ class LoginForm extends StatelessWidget {
               height: 30,
             ),
             const _buildSubmitButton(),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Get.to(() => const ForgotPasswordPage());
-                },
-                child: Text("Forgot Password",
-                    style: TextStyle(color: Colors.white)),
-              ),
-            ),
           ],
         ),
       ),
@@ -81,42 +66,48 @@ class _buildSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogoutController _logoutController = Get.put(LogoutController());
-    LoginController _loginController = Get.put(LoginController());
 
     return Center(
       child: Obx(
-        () => _loginController.isLoading.value == true
+        () => _firebaseController.isLoading.value == true
             ? CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2.0,
+                strokeWidth: 2,
+                color: Colors.black,
               )
             : ElevatedButton(
                 style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0),
+                    elevation: MaterialStateProperty.all(0),
                     fixedSize: MaterialStateProperty.all<Size>(Size(200, 50)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(HexColor('ff212121')),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      HexColor('ff212121'),
+                    ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
-                            side:
-                                BorderSide(color: Colors.white, width: 1.5)))),
+                            side: BorderSide(width: 1.5)))),
                 onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  _loginController.isLoading(true);
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  _firebaseController.isLoading(true);
+
+                  _firebaseController.createUser(
+                      _emailController.text, _passwordController.text);
 
                   Timer(3.seconds, () {
-                    _loginController.signIn(
-                        _emailController.text, _passwordController.text);
+                    _firebaseController.isLoading(false);
+                    _firebaseController.finishedLoading(true);
+                  });
 
-                    _loginController.isLoading(false);
+                  Timer(4.5.seconds, () {
+                    Get.to(() => ProfileSetup(),
+                        arguments: _emailController.text);
                   });
                 },
                 child: Obx(
                   () => Text(
-                    _loginController.isLoading.value == false
-                        ? "Login"
-                        : "Welcome Back",
+                    _firebaseController.finishedLoading.value == false ||
+                            _logoutController.isLoggedOut.value == true
+                        ? "Create Account"
+                        : "Registered",
                     style: TextStyle(
                         fontFamily: 'Synemono',
                         color: Colors.white,
@@ -144,13 +135,19 @@ class _buildPasswordForm extends StatelessWidget {
         controller: _passwordController,
         cursorColor: HexColor('#c4a484'),
         keyboardType: TextInputType.text,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: _loginController.haveAccount.value == true
+              ? Colors.white
+              : Colors.black,
+        ),
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        obscureText: _loginController.revealPassword == true ? false : true,
+        obscureText: _loginController.revealPassword.value == true ? false : true,
         decoration: InputDecoration(
           prefixIcon: Icon(
             Icons.lock,
-            color: Colors.white,
+            color: _loginController.haveAccount.value == true
+                ? Colors.white
+                : Colors.black,
             size: 20,
           ),
           suffixIcon: Obx(
@@ -159,19 +156,27 @@ class _buildPasswordForm extends StatelessWidget {
                 _loginController.reveal();
               },
               child: Icon(
-                _loginController.revealPassword == false
+                _loginController.revealPassword.value == false
                     ? FeatherIcons.eyeOff
                     : FeatherIcons.eye,
-                color: Colors.white,
+                color: _loginController.haveAccount.value == true
+                    ? Colors.white
+                    : Colors.black,
                 size: 18,
               ),
             ),
           ),
           labelText: 'Password',
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(
+            color: _loginController.haveAccount.value == true
+                ? Colors.white
+                : Colors.black,
+          ),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.white,
+                color: _loginController.haveAccount.value == true
+                    ? Colors.white
+                    : Colors.black,
               ),
               borderRadius: BorderRadius.circular(15)),
           focusedBorder: OutlineInputBorder(
@@ -190,24 +195,28 @@ class _buildEmailForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginController _loginController = Get.put(LoginController());
-
     return TextFormField(
       controller: _emailController,
       cursorColor: HexColor('#c4a484'),
       keyboardType: TextInputType.emailAddress,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(
+        color: Colors.black,
+      ),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         prefixIcon: Icon(
           Icons.mail,
-          color: Colors.white,
+          color: Colors.black,
           size: 20,
         ),
         labelText: 'Email',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(
+          color: Colors.black,
+        ),
         enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
             borderRadius: BorderRadius.circular(15)),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: HexColor('#c4a484'), width: 1.5),

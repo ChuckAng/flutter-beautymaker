@@ -1,8 +1,4 @@
-import 'dart:async';
-
-import 'package:beautymaker/services/user_info_firebase.dart';
-import 'package:beautymaker/views/home_drawer_swap.dart';
-import 'package:beautymaker/views/profile_setup.dart';
+import 'package:beautymaker/utils/services/user_info_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
 import 'package:get/utils.dart';

@@ -1,36 +1,26 @@
 import 'dart:ui';
 
-import 'package:beautymaker/components/favourite_button.dart';
-import 'package:beautymaker/components/text_const.dart';
+import 'package:beautymaker/controllers/product_controller.dart';
+import 'package:beautymaker/models/carousel_model.dart';
 import 'package:beautymaker/views/list_view.dart';
-import 'package:beautymaker/views/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
-import 'package:hexcolor/hexcolor.dart';
 import "package:flutter_feather_icons/flutter_feather_icons.dart";
-import 'package:beautymaker/components/cart_item_box.dart';
+import 'package:beautymaker/utils/ui/cart_item_box.dart';
 import 'package:beautymaker/controllers/animated_controller.dart';
-import 'package:beautymaker/controllers/product_controller.dart';
 import 'package:beautymaker/views/cart_view.dart';
 import 'package:beautymaker/views/grid_view.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatelessWidget {
-  String _cartTag = "";
-
-  //  List<int> data = Get.arguments;
-  dynamic data = Get.arguments;
-
-  final backgroundColor = HexColor('e8e8e8');
-  //edebeb
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.height;
-    
-    
+
+    final _productController = Get.put(ProductController());
     AnimatedController _listController = Get.put(AnimatedController());
-    AnimatedController _scrollController = Get.put(AnimatedController());
     AnimatedController _wordFadeController = Get.put(AnimatedController());
-    ProductController _productController = Get.put(ProductController());
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.blueGrey[50],
@@ -85,13 +75,8 @@ class HomePage extends StatelessWidget {
                           ),
                           Stack(
                             children: [
-                              Obx(
-                                () => Positioned(
-                                  right: 3,
-                                  top: 4,
-                                  child: CartIemCountBox(_productController),
-                                ),
-                              ),
+                              Positioned(
+                                  right: 3, top: 4, child: CartItemCountBox()),
                               IconButton(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 icon: Icon(
@@ -99,7 +84,9 @@ class HomePage extends StatelessWidget {
                                   size: 27,
                                 ),
                                 onPressed: () {
-                                  Get.to(() => Cart(), arguments: data);
+                                  Get.to(
+                                    () => Cart(),
+                                  );
                                 },
                               ),
                             ],
@@ -109,21 +96,41 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    autoPlayInterval: Duration(seconds: 2),
+                    viewportFraction: 0.75,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                  items: featuredImages.map((_images) {
+                    return Container(
+                      height: size * .25,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(_images.url))),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 15),
                 Expanded(
                   child: Obx(
                     () {
-                      if (_productController.isLoading.value) {
+                      if (_productController.isLoading.value == true) {
                         return Center(
                           child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
+                              color: Colors.black, strokeWidth: 1.5),
                         );
-                      }
-                      if (_listController.isGrid.value) {
-                        return const BuildListView();
-                      }
+                      } else {
+                        if (_listController.isGrid.value) {
+                          return const BuildListView();
+                        }
 
-                      return const BuildGridView();
+                        return const BuildGridView();
+                      }
                     },
                   ),
                 ),

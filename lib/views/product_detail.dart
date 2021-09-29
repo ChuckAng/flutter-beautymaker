@@ -1,41 +1,35 @@
-import 'package:beautymaker/components/add_remove_item_box.dart';
-import 'package:beautymaker/components/text_const.dart';
-import 'package:beautymaker/controllers/animated_controller.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:beautymaker/utils/ui/add_remove_item_box.dart';
+import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:beautymaker/controllers/cart_controller.dart';
 import 'package:beautymaker/controllers/product_controller.dart';
-import 'package:beautymaker/services/user_info_firebase.dart';
-import 'package:beautymaker/views/cart_view.dart';
-import 'package:beautymaker/components/rating_bar.dart';
+import 'package:beautymaker/utils/ui/rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:getxfire/getxfire.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    ProductController _productController = Get.put(ProductController());
-    AnimatedController _addToCartController = Get.put(AnimatedController());
+    ProductController _productController = Get.put(
+      ProductController(),
+    );
 
     dynamic index;
     index = Get.arguments;
+    int productIndex = index[0];
     String rating =
         _productController.productList[index[0]]["rating"].toString();
-    String productId =
-        _productController.productList[index[0]]['id'].toString();
-    print(index);
-    print(productId);
+
     if (rating == "null") {
       rating = "N/A";
     }
-    var backgroundColor = HexColor('e8e8e8');
-    CartController _cartController =
-        Get.put(CartController(data: productId, index: index));
-    UserInfoFirebase _userInfo = Get.put(UserInfoFirebase());
+
+    CartController _cartController = Get.put(CartController(), permanent: true);
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.blueGrey[100],
+        backgroundColor: Colors.brown[50],
         body: Stack(
           children: [
             Container(),
@@ -140,14 +134,36 @@ class ProductDetail extends StatelessWidget {
                         width: 20,
                       ),
                       InkWell(
-                        splashColor: Colors.red.withOpacity(0.3),
                         onTap: () async {
-                          print("add to cart!");
-                          await _cartController.addToCart();
-                          _userInfo.getProductId();
-                          Get.back(result: [index]);
-                          print(index);
-                          _productController.addIntoCart();
+                          await _cartController.addToCart(
+                              productIndex, _productController.itemCount.value);
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.TOPSLIDE,
+                            dialogType: DialogType.SUCCES,
+                            buttonsTextStyle: TextStyle(fontSize: 20),
+                            dialogBackgroundColor:
+                                Colors.black.withOpacity(0.2),
+                            body: Center(
+                                child: Column(
+                              children: [
+                                Text('Success',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(height: 20),
+                                Text('Your item has added to cart\n',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white))
+                              ],
+                            )),
+                            headerAnimationLoop: true,
+                            autoHide: 3.seconds,
+                            dialogBorderRadius: BorderRadius.circular(20),
+                          )..show();
+
+                          _productController.resetItemCount();
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -202,11 +218,6 @@ class _buildItemDescription extends StatelessWidget {
               child: Theme(
                 data: ThemeData(accentColor: Colors.black),
                 child: ExpansionTile(
-                  onExpansionChanged: (_) {
-                    GestureDetector(
-                      onTap: () {},
-                    );
-                  },
                   initiallyExpanded: true,
                   title: Text(
                     'Description',
