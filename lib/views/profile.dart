@@ -1,3 +1,4 @@
+import 'package:beautymaker/controllers/drawer_route_controller.dart';
 import 'package:beautymaker/utils/services/user_info_firebase.dart';
 import 'package:beautymaker/utils/ui/text_const.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _getUserProfileData = Get.put(UserInfoFirebase());
+    final _routeController = Get.put(DrawerRouteController());
 
     return Scaffold(
       appBar: AppBar(
@@ -30,8 +32,8 @@ class Profile extends StatelessWidget {
               size: 18,
             ),
             color: Colors.black,
-            onPressed: () {
-              Get.back();
+            onPressed: () {      
+              _routeController.openDrawer();
             }),
         centerTitle: true,
         title: Text(
